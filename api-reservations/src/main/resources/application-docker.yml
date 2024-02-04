@@ -31,7 +31,7 @@ info:
 http-connector:
   hosts:
     api-catalog:
-      host: localhost
+      host: api-catalog
       port: 6070
       endpoints:
         get-city:
