@@ -5,6 +5,7 @@ import jakarta.validation.Valid;
 import java.util.List;
 
 public class ItineraryDTO {
+
     @Valid
     private List<SegmentDTO> segment;
 

@@ -1,22 +1,24 @@
 package com.edteam.reservations.dto;
 
+import com.edteam.reservations.validator.CityFormatConstraint;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
 public class SegmentDTO {
 
-    @NotBlank(message = "origin is mandatory")
-    @Size(min = 3, max = 3, message = "The origin must have 3 characters")
+    @CityFormatConstraint
     private String origin;
 
-    @NotBlank(message = "destination is mandatory")
-    @Size(min = 3, max = 3, message = "The destination must have 3 characters")
+    @CityFormatConstraint
     private String destination;
 
+    @NotBlank(message = "departure is mandatory")
     private String departure;
 
+    @NotBlank(message = "arrival is mandatory")
     private String arrival;
 
+    @NotBlank(message = "carrier is mandatory")
     private String carrier;
 
     public String getOrigin() {
