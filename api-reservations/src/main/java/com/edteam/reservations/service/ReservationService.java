@@ -8,6 +8,8 @@ import com.edteam.reservations.exception.EdteamException;
 import com.edteam.reservations.dto.ReservationDTO;
 import com.edteam.reservations.model.Reservation;
 import com.edteam.reservations.repository.ReservationRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.stereotype.Service;
@@ -18,6 +20,8 @@ import java.util.Optional;
 
 @Service
 public class ReservationService {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(ReservationService.class);
 
     private ReservationRepository repository;
 
@@ -41,6 +45,7 @@ public class ReservationService {
     public ReservationDTO getReservationById(Long id) {
         Optional<Reservation> result = repository.getReservationById(id);
         if(result.isEmpty()) {
+            LOGGER.debug("Not exist reservation with the id {}", id);
             throw new EdteamException(APIError.RESERVATION_NOT_FOUND);
         }
         return conversionService.convert(result.get(), ReservationDTO.class);
@@ -50,7 +55,6 @@ public class ReservationService {
         if(Objects.nonNull(reservation.getId())) {
             throw new EdteamException(APIError.RESERVATION_WITH_SAME_ID);
         }
-
         checkCity(reservation);
 
         Reservation transformed = conversionService.convert(reservation, Reservation.class);
@@ -60,6 +64,7 @@ public class ReservationService {
 
     public ReservationDTO update(Long id, ReservationDTO reservation) {
         if(getReservationById(id) == null) {
+            LOGGER.debug("Not exist reservation with the id {}", id);
             throw new EdteamException(APIError.RESERVATION_NOT_FOUND);
         }
         checkCity(reservation);
@@ -70,6 +75,7 @@ public class ReservationService {
 
     public void delete(Long id) {
         if(getReservationById(id) == null) {
+            LOGGER.debug("Not exist reservation with the id {}", id);
             throw new EdteamException(APIError.RESERVATION_NOT_FOUND);
         }
 
@@ -85,8 +91,8 @@ public class ReservationService {
             if(origin == null || destination == null) {
                 throw new EdteamException(APIError.VALIDATION_ERROR);
             } else {
-                System.out.println(origin.getName());
-                System.out.println(destination.getName());
+                LOGGER.debug(origin.getName());
+                LOGGER.debug(destination.getName());
             }
         }
     }
