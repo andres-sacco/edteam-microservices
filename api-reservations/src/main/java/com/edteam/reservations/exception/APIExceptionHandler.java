@@ -1,6 +1,5 @@
 package com.edteam.reservations.exception;
 
-
 import com.edteam.reservations.dto.ErrorDTO;
 import com.edteam.reservations.enums.APIError;
 import org.springframework.http.HttpHeaders;
@@ -22,15 +21,14 @@ public class APIExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(EdteamException.class)
     public ResponseEntity<ErrorDTO> duplicateResource(EdteamException e, WebRequest request) {
-        return ResponseEntity.status(e.getStatus())
-                .body(new ErrorDTO(e.getDescription(), e.getReasons()));
+        return ResponseEntity.status(e.getStatus()).body(new ErrorDTO(e.getDescription(), e.getReasons()));
     }
 
     @Override
-    protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers,
-                                                                  HttpStatusCode status, WebRequest request) {
+    protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
+            HttpHeaders headers, HttpStatusCode status, WebRequest request) {
         List<String> reasons = new ArrayList<>();
-        for(FieldError error : ex.getBindingResult().getFieldErrors()) {
+        for (FieldError error : ex.getBindingResult().getFieldErrors()) {
             reasons.add(String.format("%s - %s", error.getField(), error.getDefaultMessage()));
         }
         return ResponseEntity.status(APIError.VALIDATION_ERROR.getHttpStatus())

@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-
 @RestController
 @RequestMapping("/reservation")
 @Validated
@@ -56,7 +55,8 @@ public class ReservationController implements ReservationResource {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ReservationDTO> update(@Min(1) @PathVariable Long id, @RequestBody @Valid ReservationDTO reservation) {
+    public ResponseEntity<ReservationDTO> update(@Min(1) @PathVariable Long id,
+            @RequestBody @Valid ReservationDTO reservation) {
         LOGGER.info("Updating a reservation with {}", id);
         ReservationDTO response = service.update(id, reservation);
 

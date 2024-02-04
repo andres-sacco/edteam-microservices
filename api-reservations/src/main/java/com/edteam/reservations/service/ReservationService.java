@@ -30,9 +30,8 @@ public class ReservationService {
     private CatalogConnector catalogConnector;
 
     @Autowired
-    public ReservationService(ReservationRepository repository,
-                              ConversionService conversionService,
-                              CatalogConnector catalogConnector) {
+    public ReservationService(ReservationRepository repository, ConversionService conversionService,
+            CatalogConnector catalogConnector) {
         this.repository = repository;
         this.conversionService = conversionService;
         this.catalogConnector = catalogConnector;
@@ -44,7 +43,7 @@ public class ReservationService {
 
     public ReservationDTO getReservationById(Long id) {
         Optional<Reservation> result = repository.getReservationById(id);
-        if(result.isEmpty()) {
+        if (result.isEmpty()) {
             LOGGER.debug("Not exist reservation with the id {}", id);
             throw new EdteamException(APIError.RESERVATION_NOT_FOUND);
         }
@@ -52,7 +51,7 @@ public class ReservationService {
     }
 
     public ReservationDTO save(ReservationDTO reservation) {
-        if(Objects.nonNull(reservation.getId())) {
+        if (Objects.nonNull(reservation.getId())) {
             throw new EdteamException(APIError.RESERVATION_WITH_SAME_ID);
         }
         checkCity(reservation);
@@ -63,7 +62,7 @@ public class ReservationService {
     }
 
     public ReservationDTO update(Long id, ReservationDTO reservation) {
-        if(getReservationById(id) == null) {
+        if (getReservationById(id) == null) {
             LOGGER.debug("Not exist reservation with the id {}", id);
             throw new EdteamException(APIError.RESERVATION_NOT_FOUND);
         }
@@ -74,7 +73,7 @@ public class ReservationService {
     }
 
     public void delete(Long id) {
-        if(getReservationById(id) == null) {
+        if (getReservationById(id) == null) {
             LOGGER.debug("Not exist reservation with the id {}", id);
             throw new EdteamException(APIError.RESERVATION_NOT_FOUND);
         }
@@ -82,13 +81,12 @@ public class ReservationService {
         repository.delete(id);
     }
 
-
     private void checkCity(ReservationDTO reservationDTO) {
         for (SegmentDTO segmentDTO : reservationDTO.getItinerary().getSegment()) {
             CityDTO origin = catalogConnector.getCity(segmentDTO.getOrigin());
             CityDTO destination = catalogConnector.getCity(segmentDTO.getDestination());
 
-            if(origin == null || destination == null) {
+            if (origin == null || destination == null) {
                 throw new EdteamException(APIError.VALIDATION_ERROR);
             } else {
                 LOGGER.debug(origin.getName());

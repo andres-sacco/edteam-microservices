@@ -7,10 +7,12 @@ import java.lang.annotation.*;
 
 @Documented
 @Constraint(validatedBy = CityFormatValidator.class)
-@Target( { ElementType.METHOD, ElementType.FIELD })
+@Target({ ElementType.METHOD, ElementType.FIELD })
 @Retention(RetentionPolicy.RUNTIME)
 public @interface CityFormatConstraint {
     String message() default "Invalid format of the city";
+
     Class<?>[] groups() default {};
+
     Class<? extends Payload>[] payload() default {};
 }

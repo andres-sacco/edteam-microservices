@@ -25,6 +25,7 @@
         <zally-maven-plugin.version>1.0.3</zally-maven-plugin.version>
 
         <maven-enforcer-plugin.version>3.4.1</maven-enforcer-plugin.version>
+        <formatter-maven-plugin.version>2.23.0</formatter-maven-plugin.version>
     </properties>
     <dependencies>
         <dependency>
@@ -90,6 +91,21 @@
 
     <build>
         <plugins>
+            <plugin>
+                <groupId>net.revelc.code.formatter</groupId>
+                <artifactId>formatter-maven-plugin</artifactId>
+                <version>${formatter-maven-plugin.version}</version>
+                <configuration>
+                    <encoding>UTF-8</encoding>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>format</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>

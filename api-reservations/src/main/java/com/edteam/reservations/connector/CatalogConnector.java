@@ -34,7 +34,6 @@ public class CatalogConnector {
 
     private HttpConnectorConfiguration configuration;
 
-
     @Autowired
     public CatalogConnector(HttpConnectorConfiguration configuration) {
         this.configuration = configuration;
@@ -48,25 +47,22 @@ public class CatalogConnector {
         EndpointConfiguration endpointConfiguration = hostConfiguration.getEndpoints().get(ENDPOINT);
 
         HttpClient httpClient = HttpClient.create()
-                .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, Math.toIntExact(endpointConfiguration.getConnectionTimeout()))
+                .option(ChannelOption.CONNECT_TIMEOUT_MILLIS,
+                        Math.toIntExact(endpointConfiguration.getConnectionTimeout()))
                 .doOnConnected(conn -> conn
-                        .addHandler(new ReadTimeoutHandler(endpointConfiguration.getReadTimeout(), TimeUnit.MILLISECONDS))
-                        .addHandler(new WriteTimeoutHandler(endpointConfiguration.getWriteTimeout(), TimeUnit.MILLISECONDS)));
-
+                        .addHandler(
+                                new ReadTimeoutHandler(endpointConfiguration.getReadTimeout(), TimeUnit.MILLISECONDS))
+                        .addHandler(new WriteTimeoutHandler(endpointConfiguration.getWriteTimeout(),
+                                TimeUnit.MILLISECONDS)));
 
         WebClient client = WebClient.builder()
-                .baseUrl("http://" + hostConfiguration.getHost() + ":" + hostConfiguration.getPort() + endpointConfiguration.getUrl())
+                .baseUrl("http://" + hostConfiguration.getHost() + ":" + hostConfiguration.getPort()
+                        + endpointConfiguration.getUrl())
                 .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
                 .defaultHeader(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE)
-                .clientConnector(new ReactorClientHttpConnector(httpClient))
-                .build();
+                .clientConnector(new ReactorClientHttpConnector(httpClient)).build();
 
-
-        return client.get()
-                .uri(urlEncoder -> urlEncoder.build(code))
-                .retrieve()
-                .bodyToMono(CityDTO.class)
-                .share()
+        return client.get().uri(urlEncoder -> urlEncoder.build(code)).retrieve().bodyToMono(CityDTO.class).share()
                 .block();
     }
 

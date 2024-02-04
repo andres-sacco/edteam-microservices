@@ -20,7 +20,7 @@ public class ReservationRepository {
         passenger.setId(1L);
         passenger.setDocumentType("DNI");
         passenger.setDocumentNumber("12345678");
-        passenger.setBirthday(LocalDate.of(1985,1,1));
+        passenger.setBirthday(LocalDate.of(1985, 1, 1));
 
         Price price = new Price();
         price.setBasePrice(BigDecimal.ONE);
@@ -48,17 +48,15 @@ public class ReservationRepository {
         reservations.add(reservation);
     }
 
-
     public List<Reservation> getReservations() {
         return reservations;
     }
 
     public Optional<Reservation> getReservationById(Long id) {
-        List<Reservation> result = reservations.stream()
-                .filter(reservation -> Objects.equals(reservation.getId(), id))
+        List<Reservation> result = reservations.stream().filter(reservation -> Objects.equals(reservation.getId(), id))
                 .toList();
 
-        Reservation reservation = !result.isEmpty() ? result.get(0): null;
+        Reservation reservation = !result.isEmpty() ? result.get(0) : null;
         return Optional.ofNullable(reservation);
     }
 
@@ -69,9 +67,7 @@ public class ReservationRepository {
     }
 
     public Reservation update(Long id, Reservation reservation) {
-        List<Reservation> result = reservations.stream()
-                .filter(reser -> reser.getId().equals(id))
-                .toList();
+        List<Reservation> result = reservations.stream().filter(reser -> reser.getId().equals(id)).toList();
         result.get(0).setId(reservation.getId());
         result.get(0).setItinerary(reservation.getItinerary());
         result.get(0).setPassengers(reservation.getPassengers());
@@ -80,9 +76,7 @@ public class ReservationRepository {
     }
 
     public void delete(Long id) {
-        List<Reservation> result = reservations.stream()
-                .filter(reservation -> reservation.getId().equals(id))
-                .toList();
+        List<Reservation> result = reservations.stream().filter(reservation -> reservation.getId().equals(id)).toList();
 
         reservations.remove(result.get(0));
     }
