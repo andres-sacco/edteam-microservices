@@ -1,4 +1,11 @@
 management:
+  info:
+    env:
+      enabled: true
+  endpoint:
+    health:
+      show-details: always
+
   endpoints:
     web:
       base-path: /
@@ -15,4 +22,8 @@ server:
   servlet:
     context-path: /api
 
-
+info:
+  application:
+    groupId: '@project.groupId@'
+    artifactId: '@project.artifactId@'
+    version: '@project.version@'
