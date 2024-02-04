@@ -19,6 +19,10 @@
         <resilience4j.version>2.1.0</resilience4j.version>
         <springdoc-openapi-starter-webmvc-ui.version>2.1.0</springdoc-openapi-starter-webmvc-ui.version>
         <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
+
+        <springdoc-openapi-maven-plugin.version>1.1</springdoc-openapi-maven-plugin.version>
+        <zally-ruleset-zalando.version>2.1.0</zally-ruleset-zalando.version>
+        <zally-maven-plugin.version>1.0.3</zally-maven-plugin.version>
     </properties>
     <dependencies>
         <dependency>
@@ -102,5 +106,117 @@
             </plugin>
         </plugins>
     </build>
+    <profiles>
+        <profile>
+            <id>OPENAPI</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.springframework.boot</groupId>
+                        <artifactId>spring-boot-maven-plugin</artifactId>
+                        <configuration>
+                            <wait>10000</wait>
+                            <maxAttempts>180</maxAttempts>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <goals>
+                                    <goal>repackage</goal>
+                                </goals>
+                            </execution>
+                            <execution>
+                                <id>start-app</id>
+                                <phase>pre-integration-test</phase>
+                                <goals>
+                                    <goal>start</goal>
+                                </goals>
+                            </execution>
+                            <execution>
+                                <id>stop-app</id>
+                                <phase>post-integration-test</phase>
+                                <goals>
+                                    <goal>stop</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.springdoc</groupId>
+                        <artifactId>springdoc-openapi-maven-plugin</artifactId>
+                        <version>${springdoc-openapi-maven-plugin.version}</version>
+                        <executions>
+                            <execution>
+                                <id>integration-test</id>
+                                <phase>integration-test</phase>
+                                <goals>
+                                    <goal>generate</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                        <configuration>
+                            <apiDocsUrl>http://localhost:8080/api/v3/api-docs</apiDocsUrl>
+                            <outputFileName>openapi-specification.json</outputFileName>
+                            <outputDir>${project.build.directory}</outputDir>
+                            <skip>false</skip>
+                        </configuration>
+                    </plugin>
+
+                    <plugin>
+                        <groupId>com.ethlo.zally</groupId>
+                        <artifactId>zally-maven-plugin</artifactId>
+                        <version>${zally-maven-plugin.version}</version>
+                        <configuration>
+                            <!--Configure severities that fail the build. Default is MUST, SHOULD -->
+                            <failOn>MUST</failOn>
+                            <!--Ignore certain rules. Default is none -->
+                            <skipRules>
+                                <skipRule>ApiAudienceRule</skipRule>
+                                <skipRule>ApiIdentifierRule</skipRule>
+                                <skipRule>CommonFieldTypesRule</skipRule>
+                                <skipRule>UseProblemJsonRule</skipRule>
+                                <skipRule>JsonProblemAsDefaultResponseRule</skipRule>
+                                <skipRule>SecureAllEndpointsRule</skipRule>
+                                <skipRule>SecureAllEndpointsWithScopesRule</skipRule>
+                                <skipRule>NoVersionInUriRule</skipRule>
+                                <skipRule>FunctionalNamingForHostnamesRule</skipRule>
+                                <skipRule>ExtensibleEnumRule</skipRule>
+                                <skipRule>SnakeCaseInPropNameRule</skipRule>
+                                <skipRule>ProprietaryHeadersRule</skipRule>
+                                <skipRule>IdentifyResourcesViaPathSegments</skipRule>
+                                <skipRule>VersionInInfoSectionRule</skipRule>
+                                <skipRule>ApiMetaInformationRule</skipRule>
+                                <skipRule>DateTimePropertiesSuffixRule</skipRule>
+                                <skipRule>PluralizeResourceNamesRule</skipRule>
+                                <skipRule>SuccessResponseAsJsonObjectRule</skipRule>
+                                <skipRule>FormatForNumbersRule</skipRule>
+                            </skipRules>
+
+                            <!-- The input file to validate -->
+                            <source>target/openapi-specification.json</source>
+
+                            <resultFile>target/openapi-results.json</resultFile>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>report</goal>
+                                    <goal>validate</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                        <dependencies>
+                            <dependency>
+                                <groupId>org.zalando</groupId>
+                                <artifactId>zally-ruleset-zalando</artifactId>
+                                <version>${zally-ruleset-zalando.version}</version>
+                            </dependency>
+                        </dependencies>
+                    </plugin>
+                </plugins>
+
+            </build>
+        </profile>
+    </profiles>
 
 </project>
