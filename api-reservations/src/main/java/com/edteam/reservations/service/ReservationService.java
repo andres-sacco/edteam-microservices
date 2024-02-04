@@ -1,7 +1,7 @@
 package com.edteam.reservations.service;
 
-import com.edteam.reservations.exception.EdteamException;
 import com.edteam.reservations.dto.ReservationDTO;
+import com.edteam.reservations.exception.EdteamException;
 import com.edteam.reservations.model.Reservation;
 import com.edteam.reservations.repository.ReservationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,9 +14,7 @@ import java.util.Optional;
 
 @Service
 public class ReservationService {
-
     private ReservationRepository repository;
-
     private ConversionService conversionService;
 
     @Autowired
@@ -42,7 +40,6 @@ public class ReservationService {
         if(Objects.nonNull(reservation.getId())) {
             throw new EdteamException("Duplicate it");
         }
-
         Reservation transformed = conversionService.convert(reservation, Reservation.class);
         Reservation result = repository.save(Objects.requireNonNull(transformed));
         return conversionService.convert(result, ReservationDTO.class);
@@ -62,7 +59,6 @@ public class ReservationService {
         if(getReservationById(id) == null) {
             throw new EdteamException("Not exist");
         }
-
         repository.delete(id);
     }
 }

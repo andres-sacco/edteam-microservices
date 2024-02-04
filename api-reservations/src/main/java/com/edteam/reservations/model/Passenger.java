@@ -1,7 +1,6 @@
 package com.edteam.reservations.model;
 
 import java.time.LocalDate;
-import java.util.Date;
 
 public class Passenger {
 
