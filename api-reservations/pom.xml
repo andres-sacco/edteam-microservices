@@ -23,6 +23,8 @@
         <springdoc-openapi-maven-plugin.version>1.1</springdoc-openapi-maven-plugin.version>
         <zally-ruleset-zalando.version>2.1.0</zally-ruleset-zalando.version>
         <zally-maven-plugin.version>1.0.3</zally-maven-plugin.version>
+
+        <maven-enforcer-plugin.version>3.4.1</maven-enforcer-plugin.version>
     </properties>
     <dependencies>
         <dependency>
@@ -107,6 +109,28 @@
                         </path>
                     </annotationProcessorPaths>
                 </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-enforcer-plugin</artifactId>
+                <version>${maven-enforcer-plugin.version}</version>
+                <executions>
+                    <execution>
+                        <id>enforce-versions</id>
+                        <goals>
+                            <goal>enforce</goal>
+                        </goals>
+                        <configuration>
+                            <rules>
+                                <dependencyConvergence />
+                                <requireJavaVersion>
+                                    <version>${java.version}</version>
+                                </requireJavaVersion>
+                            </rules>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
