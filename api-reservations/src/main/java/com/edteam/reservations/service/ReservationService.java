@@ -27,7 +27,7 @@ public class ReservationService {
     }
 
     public List<ReservationDTO> getReservations() {
-        return  conversionService.convert(repository.getReservations(), List.class);
+        return conversionService.convert(repository.getReservations(), List.class);
     }
 
     public ReservationDTO getReservationById(Long id) {
