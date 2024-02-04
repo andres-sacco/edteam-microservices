@@ -4,8 +4,12 @@ import com.edteam.reservations.connector.configuration.EndpointConfiguration;
 import com.edteam.reservations.connector.configuration.HostConfiguration;
 import com.edteam.reservations.connector.configuration.HttpConnectorConfiguration;
 import com.edteam.reservations.connector.response.CityDTO;
+import com.edteam.reservations.enums.APIError;
+import com.edteam.reservations.exception.EdteamException;
+import io.github.resilience4j.circuitbreaker.CallNotPermittedException;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import io.netty.channel.ChannelOption;
+import io.netty.handler.timeout.ReadTimeoutException;
 import io.netty.handler.timeout.ReadTimeoutHandler;
 import io.netty.handler.timeout.WriteTimeoutHandler;
 
@@ -15,6 +19,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.client.reactive.ReactorClientHttpConnector;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.reactive.function.client.WebClientRequestException;
 import reactor.netty.http.client.HttpClient;
 
 import java.util.concurrent.TimeUnit;
@@ -34,7 +39,7 @@ public class CatalogConnector {
         this.configuration = configuration;
     }
 
-    @CircuitBreaker(name = "api-catalog")
+    @CircuitBreaker(name = "api-catalog", fallbackMethod = "fallbackGetCity")
     public CityDTO getCity(String code) {
 
         System.out.println("calling to api-catalog");
@@ -65,5 +70,15 @@ public class CatalogConnector {
                 .block();
     }
 
+    public CityDTO fallbackGetCity(String code, CallNotPermittedException ex) {
+        System.out.println("calling to fallbackGetCity-1");
 
+        return new CityDTO();
+    }
+
+    public CityDTO fallbackGetCity(String code, Exception ex) {
+        System.out.println("calling to fallbackGetCity-2");
+
+        throw new EdteamException(APIError.VALIDATION_ERROR);
+    }
 }

@@ -52,7 +52,7 @@ resilience4j:
         wait-duration-in-open-state: 10s
         permitted-number-of-calls-in-half-open-state: 1
 
-        register-health-indicator: true
+        register-health-indicator: false
         record-exceptions:
           - io.netty.handler.timeout.ReadTimeoutException
           - java.lang.RuntimeException
