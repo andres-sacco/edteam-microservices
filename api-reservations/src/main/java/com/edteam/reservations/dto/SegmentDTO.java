@@ -2,7 +2,6 @@ package com.edteam.reservations.dto;
 
 import com.edteam.reservations.validator.CityFormatConstraint;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
 
 public class SegmentDTO {
 

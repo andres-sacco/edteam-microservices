@@ -1,5 +1,6 @@
 package com.edteam.reservations.service;
 
+import com.edteam.reservations.enums.APIError;
 import com.edteam.reservations.exception.EdteamException;
 import com.edteam.reservations.dto.ReservationDTO;
 import com.edteam.reservations.model.Reservation;
@@ -33,14 +34,14 @@ public class ReservationService {
     public ReservationDTO getReservationById(Long id) {
         Optional<Reservation> result = repository.getReservationById(id);
         if(result.isEmpty()) {
-            throw new EdteamException("Not exist");
+            throw new EdteamException(APIError.RESERVATION_NOT_FOUND);
         }
         return conversionService.convert(result.get(), ReservationDTO.class);
     }
 
     public ReservationDTO save(ReservationDTO reservation) {
         if(Objects.nonNull(reservation.getId())) {
-            throw new EdteamException("Duplicate it");
+            throw new EdteamException(APIError.RESERVATION_WITH_SAME_ID);
         }
 
         Reservation transformed = conversionService.convert(reservation, Reservation.class);
@@ -50,7 +51,7 @@ public class ReservationService {
 
     public ReservationDTO update(Long id, ReservationDTO reservation) {
         if(getReservationById(id) == null) {
-            throw new EdteamException("Not exist");
+            throw new EdteamException(APIError.RESERVATION_NOT_FOUND);
         }
 
         Reservation transformed = conversionService.convert(reservation, Reservation.class);
@@ -60,7 +61,7 @@ public class ReservationService {
 
     public void delete(Long id) {
         if(getReservationById(id) == null) {
-            throw new EdteamException("Not exist");
+            throw new EdteamException(APIError.RESERVATION_NOT_FOUND);
         }
 
         repository.delete(id);
