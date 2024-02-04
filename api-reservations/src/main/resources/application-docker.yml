@@ -1,0 +1,72 @@
+management:
+  info:
+    env:
+      enabled: true
+  endpoint:
+    health:
+      show-details: always
+
+  endpoints:
+    web:
+      base-path: /
+      exposure:
+        include: "*"
+
+server:
+  port: 8080
+  compression:
+    enabled: true
+    min-response-size: 2048
+    mime-types: application/json,application/xml,text/html,text/plain
+
+  servlet:
+    context-path: /api
+
+info:
+  application:
+    groupId: '@project.groupId@'
+    artifactId: '@project.artifactId@'
+    version: '@project.version@'
+
+http-connector:
+  hosts:
+    api-catalog:
+      host: localhost
+      port: 6070
+      endpoints:
+        get-city:
+          url: "/api/flights/catalog/city/{code}"
+          readTimeout: 10000
+          writeTimeout: 10000
+          connectionTimeout: 20000
+
+resilience4j:
+  circuitbreaker:
+    configs:
+      default:
+        failure-rate-threshold: 50
+        sliding-window-type: count_based
+        sliding-window-size: 5
+
+        automatic-transition-from-open-to-half-open-enabled: true
+        wait-duration-in-open-state: 10s
+        permitted-number-of-calls-in-half-open-state: 1
+
+        register-health-indicator: false
+        record-exceptions:
+          - io.netty.handler.timeout.ReadTimeoutException
+          - java.lang.RuntimeException
+          - java.lang.Exception
+    instances:
+      api-catalog:
+        base-config: default
+
+  ratelimiter:
+    configs:
+      default:
+        limit-for-period: 2
+        limit-refresh-period: 3s
+        timeout-duration: 1s
+    instances:
+      post-reservation:
+        base-config: default
