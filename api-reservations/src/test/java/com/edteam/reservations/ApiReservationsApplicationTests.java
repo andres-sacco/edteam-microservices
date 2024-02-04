@@ -1,13 +1,13 @@
-package com.edteam.reservation;
+package com.edteam.reservations;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class ApiReservationApplicationTests {
+class ApiReservationsApplicationTests {
 
-	@Test
-	void contextLoads() {
-	}
+    @Test
+    void contextLoads() {
+    }
 
 }
