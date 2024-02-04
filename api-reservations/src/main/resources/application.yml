@@ -60,3 +60,13 @@ resilience4j:
     instances:
       api-catalog:
         base-config: default
+
+  ratelimiter:
+    configs:
+      default:
+        limit-for-period: 2
+        limit-refresh-period: 3s
+        timeout-duration: 1s
+    instances:
+      post-reservation:
+        base-config: default

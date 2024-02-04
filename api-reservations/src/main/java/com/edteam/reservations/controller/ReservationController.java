@@ -1,7 +1,12 @@
 package com.edteam.reservations.controller;
 
+import com.edteam.reservations.connector.response.CityDTO;
 import com.edteam.reservations.dto.ReservationDTO;
+import com.edteam.reservations.enums.APIError;
+import com.edteam.reservations.exception.EdteamException;
 import com.edteam.reservations.service.ReservationService;
+import io.github.resilience4j.ratelimiter.RequestNotPermitted;
+import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +42,7 @@ public class ReservationController {
     }
 
     @PostMapping
+    @RateLimiter(name = "post-reservation", fallbackMethod = "fallbackPost")
     public ResponseEntity<ReservationDTO> save(@RequestBody @Valid ReservationDTO reservation) {
         ReservationDTO response = service.save(reservation);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
@@ -55,4 +61,10 @@ public class ReservationController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+
+    private ResponseEntity<ReservationDTO> fallbackPost(ReservationDTO reservation, RequestNotPermitted ex) {
+        System.out.println("calling to fallbackPost");
+
+        throw new EdteamException(APIError.EXCEED_NUMBER_OPERATIONS);
+    }
 }
