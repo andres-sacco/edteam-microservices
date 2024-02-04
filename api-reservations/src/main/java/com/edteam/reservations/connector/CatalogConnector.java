@@ -4,6 +4,7 @@ import com.edteam.reservations.connector.configuration.EndpointConfiguration;
 import com.edteam.reservations.connector.configuration.HostConfiguration;
 import com.edteam.reservations.connector.configuration.HttpConnectorConfiguration;
 import com.edteam.reservations.connector.response.CityDTO;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import io.netty.channel.ChannelOption;
 import io.netty.handler.timeout.ReadTimeoutHandler;
 import io.netty.handler.timeout.WriteTimeoutHandler;
@@ -33,7 +34,10 @@ public class CatalogConnector {
         this.configuration = configuration;
     }
 
+    @CircuitBreaker(name = "api-catalog")
     public CityDTO getCity(String code) {
+
+        System.out.println("calling to api-catalog");
 
         HostConfiguration hostConfiguration = configuration.getHosts().get(HOST);
         EndpointConfiguration endpointConfiguration = hostConfiguration.getEndpoints().get(ENDPOINT);
