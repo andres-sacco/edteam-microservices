@@ -27,3 +27,15 @@ info:
     groupId: '@project.groupId@'
     artifactId: '@project.artifactId@'
     version: '@project.version@'
+
+http-connector:
+  hosts:
+    api-catalog:
+      host: localhost
+      port: 6070
+      endpoints:
+        get-city:
+          url: "/api/flights/catalog/city/{code}"
+          readTimeout: 1000
+          writeTimeout: 1000
+          connectionTimeout: 2000

@@ -4,7 +4,6 @@ import java.util.List;
 
 public class ErrorDTO {
     private String description;
-
     private List<String> reasons;
 
     public ErrorDTO(String description, List<String> reasons) {

@@ -5,13 +5,11 @@ import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 @Component
 public class ReservationRepository {
+
     static List<Reservation> reservations = new ArrayList<>();
 
     static {
@@ -50,6 +48,7 @@ public class ReservationRepository {
         reservations.add(reservation);
     }
 
+
     public List<Reservation> getReservations() {
         return reservations;
     }
@@ -87,5 +86,4 @@ public class ReservationRepository {
 
         reservations.remove(result.get(0));
     }
-
 }
